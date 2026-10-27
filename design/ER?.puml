@@ -1,0 +1,38 @@
+@startuml
+entity equipment {
+  * id : string
+  --
+  name : string
+  code : string
+  location : string
+  category : string
+  status : enum
+  owner : string
+  lastInspectionAt : datetime
+}
+
+entity inspection {
+  * id : string
+  --
+  equipmentId : string
+  inspector : string
+  result : enum
+  note : string
+  createdAt : datetime
+}
+
+entity ticket {
+  * id : string
+  --
+  equipmentId : string
+  title : string
+  severity : enum
+  status : enum
+  assignee : string
+  createdAt : datetime
+  updatedAt : datetime
+}
+
+equipment ||--o{ inspection
+equipment ||--o{ ticket
+@enduml

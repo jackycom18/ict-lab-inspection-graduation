@@ -1,0 +1,98 @@
+name: 毕业设计全栈小组
+version: 1
+leader:
+  responsibility: 按阶段调度成员、检查交付物并阻止跨阶段返工
+  completion_gate:
+    - 当前阶段产物齐全
+    - 自动化测试通过
+    - 需求追踪矩阵已更新
+roles:
+  - id: requirements-analyst
+    name: 需求分析师
+    single_responsibility: 用户角色、业务流程、功能与非功能需求
+    outputs:
+      - requirements/需求规格说明书.md
+      - requirements/用例图.puml
+      - requirements/需求追踪矩阵.md
+    permissions:
+      read: project
+      write: requirements
+  - id: system-architect
+    name: 系统架构师
+    single_responsibility: 架构、数据模型、API 契约和技术选型
+    outputs:
+      - design/系统设计文档.md
+      - design/架构图.puml
+      - design/ER图.puml
+      - design/api-contract.yaml
+      - design/database/ddl.sql
+    permissions:
+      read: requirements
+      write: design
+  - id: frontend-developer
+    name: 前端开发者
+    single_responsibility: 页面结构、视觉系统、交互和浏览器数据流
+    outputs:
+      - frontend/index.html
+      - frontend/styles.css
+      - frontend/app.js
+    permissions:
+      read: design, requirements
+      write: frontend
+  - id: backend-developer
+    name: 后端开发者
+    single_responsibility: REST API、数据存储、校验和工单状态机
+    outputs:
+      - backend/app.mjs
+      - backend/store.mjs
+      - backend/server.mjs
+    permissions:
+      read: design, requirements
+      write: backend
+  - id: test-engineer
+    name: 测试工程师
+    single_responsibility: 功能测试、状态机测试和验收报告
+    outputs:
+      - tests/api.test.mjs
+      - reports/test-report.md
+    permissions:
+      read: frontend, backend, requirements
+      write: tests, reports
+  - id: thesis-writer
+    name: 论文撰写者
+    single_responsibility: 将真实需求、设计、实现和测试整合为六章论文
+    outputs:
+      - thesis/毕业论文.md
+    permissions:
+      read: requirements, design, frontend, backend, tests
+      write: thesis
+  - id: defense-assistant
+    name: 答辩助手
+    single_responsibility: PPT 大纲、演示脚本和技术问答
+    outputs:
+      - defense/答辩PPT大纲.md
+      - defense/演示脚本.md
+      - defense/预测QA.md
+    permissions:
+      read: all_artifacts
+      write: defense
+workflow:
+  - phase: 1
+    name: 需求
+    owner: requirements-analyst
+  - phase: 2
+    name: 设计
+    owner: system-architect
+  - phase: 3
+    name: 开发
+    parallel:
+      - frontend-developer
+      - backend-developer
+  - phase: 4
+    name: 测试与论文
+    parallel:
+      - test-engineer
+      - thesis-writer
+  - phase: 5
+    name: 答辩
+    owner: defense-assistant

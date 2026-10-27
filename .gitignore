@@ -1,0 +1,6 @@
+data/
+node_modules/
+*.log
+*.tmp
+.screenshot.tmp.*
+.ui-check.tmp.*

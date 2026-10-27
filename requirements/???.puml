@@ -1,0 +1,24 @@
+@startuml
+left to right direction
+actor 管理员
+actor 巡检员
+actor 维修人员
+
+rectangle 实验室巡检系统 {
+  usecase "登记设备" as UC1
+  usecase "查看设备状态" as UC2
+  usecase "记录巡检结果" as UC3
+  usecase "创建故障工单" as UC4
+  usecase "领取/推进工单" as UC5
+  usecase "查看运营统计" as UC6
+}
+
+管理员 --> UC1
+管理员 --> UC2
+管理员 --> UC6
+巡检员 --> UC2
+巡检员 --> UC3
+巡检员 --> UC4
+维修人员 --> UC5
+维修人员 --> UC2
+@enduml

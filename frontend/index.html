@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="校园实验室设备巡检与故障工单管理系统"
+    />
+    <title>实验室设备巡检 · LAB LINE</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="control-rail" aria-label="主导航">
+        <a class="brand" href="#overview" aria-label="返回总览">
+          <span class="brand-mark">LL</span>
+          <span>
+            <strong>LAB LINE</strong>
+            <small>设备巡检台</small>
+          </span>
+        </a>
+
+        <nav class="rail-nav">
+          <a href="#overview">总览</a>
+          <a href="#equipment">设备阵列</a>
+          <a href="#tickets">故障纸带</a>
+          <a href="#inspections">巡检记录</a>
+        </nav>
+
+        <div class="rail-note">
+          <span>值班终端</span>
+          <strong id="clock">--:--</strong>
+          <small>深圳技术大学 · 实验中心</small>
+        </div>
+      </aside>
+
+      <main class="workbench">
+        <header class="bench-header" id="overview">
+          <div>
+            <p class="station-label">INSPECTION STATION / 04</p>
+            <h1>校园实验室设备巡检</h1>
+            <p class="bench-intro">
+              把设备状态、巡检结论与维修责任放在同一条工作线上。
+            </p>
+          </div>
+          <div class="bench-status" aria-live="polite">
+            <span class="signal-dot"></span>
+            <span>系统在线</span>
+          </div>
+        </header>
+
+        <section class="instrument-strip" aria-label="运营指标">
+          <article class="reading">
+            <span>设备总数</span>
+            <strong id="stat-equipment">--</strong>
+            <small>本实验室网络</small>
+          </article>
+          <article class="reading reading--accent">
+            <span>运行正常</span>
+            <strong id="stat-operational">--</strong>
+            <small>可立即使用</small>
+          </article>
+          <article class="reading">
+            <span>未结工单</span>
+            <strong id="stat-tickets">--</strong>
+            <small>等待处理</small>
+          </article>
+          <article class="reading reading--warn">
+            <span>高优先故障</span>
+            <strong id="stat-high">--</strong>
+            <small>需要优先关注</small>
+          </article>
+          <article class="reading">
+            <span>工单完成率</span>
+            <strong id="stat-completion">--</strong>
+            <small>已关闭 / 全部</small>
+          </article>
+        </section>
+
+        <section class="equipment-section" id="equipment">
+          <div class="section-heading">
+            <div>
+              <p class="station-label">EQUIPMENT RACK</p>
+              <h2>设备阵列</h2>
+            </div>
+            <span class="section-count" id="equipment-count">0 台设备</span>
+          </div>
+          <div class="equipment-grid" id="equipment-grid"></div>
+        </section>
+
+        <section class="records-layout">
+          <div class="ticket-section" id="tickets">
+            <div class="section-heading">
+              <div>
+                <p class="station-label">FAULT TAPE</p>
+                <h2>故障工单</h2>
+              </div>
+              <span class="section-count" id="ticket-count">0 张</span>
+            </div>
+            <div class="ticket-list" id="ticket-list"></div>
+          </div>
+
+          <div class="inspection-section" id="inspections">
+            <div class="section-heading">
+              <div>
+                <p class="station-label">RUN LOG</p>
+                <h2>巡检记录</h2>
+              </div>
+            </div>
+            <div class="inspection-log" id="inspection-log"></div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="action-console" aria-label="操作台">
+        <div class="console-heading">
+          <span>LOCAL CONTROL</span>
+          <strong>操作台</strong>
+        </div>
+
+        <details class="bench-tool" open>
+          <summary>登记设备</summary>
+          <form id="equipment-form">
+            <label>设备名称<input name="name" maxlength="80" required /></label>
+            <div class="field-pair">
+              <label>编号<input name="code" maxlength="40" required /></label>
+              <label>类别<input name="category" maxlength="40" required /></label>
+            </div>
+            <label>所在位置<input name="location" maxlength="80" required /></label>
+            <label>负责人<input name="owner" maxlength="40" required /></label>
+            <button type="submit">写入设备台账</button>
+          </form>
+        </details>
+
+        <details class="bench-tool">
+          <summary>记录巡检</summary>
+          <form id="inspection-form">
+            <label>
+              选择设备
+              <select name="equipmentId" id="inspection-equipment" required></select>
+            </label>
+            <label>巡检人<input name="inspector" maxlength="40" required /></label>
+            <label>
+              巡检结论
+              <select name="result" required>
+                <option value="pass">正常</option>
+                <option value="issue">发现异常</option>
+              </select>
+            </label>
+            <label>备注<textarea name="note" maxlength="500" rows="3"></textarea></label>
+            <button type="submit">写入巡检记录</button>
+          </form>
+        </details>
+
+        <details class="bench-tool">
+          <summary>上报故障</summary>
+          <form id="ticket-form">
+            <label>
+              选择设备
+              <select name="equipmentId" id="ticket-equipment" required></select>
+            </label>
+            <label>工单标题<input name="title" maxlength="120" required /></label>
+            <label>
+              严重程度
+              <select name="severity" required>
+                <option value="low">低</option>
+                <option value="medium" selected>中</option>
+                <option value="high">高</option>
+              </select>
+            </label>
+            <button type="submit">生成故障工单</button>
+          </form>
+        </details>
+
+        <p class="console-footnote">
+          本终端直接写入本地演示数据，不连接真实实验室控制器。
+        </p>
+      </aside>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

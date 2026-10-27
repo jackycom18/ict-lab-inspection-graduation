@@ -1,0 +1,23 @@
+@startuml
+skinparam componentStyle rectangle
+
+actor 用户
+
+package "Browser" {
+  [单页工作台\nHTML + CSS + JavaScript]
+}
+
+package "Node.js Process" {
+  [HTTP Router\napp.mjs]
+  [JSON Store\nstore.mjs]
+}
+
+database "data/lab-db.json" {
+  [equipment / inspections / tickets]
+}
+
+用户 --> [单页工作台]
+[单页工作台] --> [HTTP Router\napp.mjs] : REST/JSON
+[HTTP Router\napp.mjs] --> [JSON Store\nstore.mjs]
+[JSON Store\nstore.mjs] --> [equipment / inspections / tickets]
+@enduml

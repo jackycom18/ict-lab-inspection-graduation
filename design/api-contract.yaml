@@ -1,0 +1,146 @@
+openapi: 3.0.3
+info:
+  title: 实验室设备巡检与故障工单 API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:3000
+paths:
+  /api/health:
+    get:
+      summary: 健康检查
+      responses:
+        "200":
+          description: 服务正常
+  /api/equipment:
+    get:
+      summary: 查询设备
+      responses:
+        "200":
+          description: 设备列表
+    post:
+      summary: 新增设备
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EquipmentInput"
+      responses:
+        "201":
+          description: 已创建
+        "400":
+          $ref: "#/components/responses/ValidationError"
+  /api/inspections:
+    get:
+      summary: 查询巡检
+      responses:
+        "200":
+          description: 巡检列表
+    post:
+      summary: 新增巡检
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InspectionInput"
+      responses:
+        "201":
+          description: 已创建
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/tickets:
+    get:
+      summary: 查询工单
+      responses:
+        "200":
+          description: 工单列表
+    post:
+      summary: 新建工单
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketInput"
+      responses:
+        "201":
+          description: 已创建
+        "400":
+          $ref: "#/components/responses/ValidationError"
+  /api/tickets/{ticketId}:
+    patch:
+      summary: 指派或推进工单
+      parameters:
+        - in: path
+          name: ticketId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  enum: [assigned, repairing, resolved, closed]
+                assignee:
+                  type: string
+      responses:
+        "200":
+          description: 已更新
+        "409":
+          description: 非法状态转换
+  /api/stats:
+    get:
+      summary: 运营统计
+      responses:
+        "200":
+          description: 设备与工单指标
+components:
+  schemas:
+    EquipmentInput:
+      type: object
+      required: [name, code, location, category, owner]
+      properties:
+        name: { type: string, maxLength: 80 }
+        code: { type: string, maxLength: 40 }
+        location: { type: string, maxLength: 80 }
+        category: { type: string, maxLength: 40 }
+        owner: { type: string, maxLength: 40 }
+        status:
+          enum: [operational, maintenance, retired]
+    InspectionInput:
+      type: object
+      required: [equipmentId, inspector, result]
+      properties:
+        equipmentId: { type: string }
+        inspector: { type: string, maxLength: 40 }
+        result:
+          enum: [pass, issue]
+        note: { type: string, maxLength: 500 }
+    TicketInput:
+      type: object
+      required: [equipmentId, title, severity]
+      properties:
+        equipmentId: { type: string }
+        title: { type: string, maxLength: 120 }
+        severity:
+          enum: [low, medium, high]
+  responses:
+    ValidationError:
+      description: 参数错误
+      content:
+        application/json:
+          schema:
+            type: object
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            type: object
